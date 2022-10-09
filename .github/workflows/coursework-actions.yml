@@ -15,5 +15,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - name: Installing modules
         run: npm install
-      - name: Linting project
+      - name: Running Prettier
+        run: npm run pretty   
+      - name: Running Eslint
         run: npm run lint 
