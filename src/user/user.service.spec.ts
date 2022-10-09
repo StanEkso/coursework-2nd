@@ -15,11 +15,7 @@ describe('UserService', () => {
       imports: [
         TypeOrmModule.forRoot({
           type: 'postgres',
-          host: 'localhost',
-          port: 5432,
-          username: 'postgres',
-          password: 'root',
-          database: 'testingdb',
+          url: 'postgres://jdhlqued:FlJwdL50klgXl4rO5_hvcAlOtEyjC5qK@mouse.db.elephantsql.com/jdhlqued',
           entities: [Users],
           synchronize: true,
         }),
@@ -77,9 +73,24 @@ describe('UserService', () => {
   });
 
   describe('getById', () => {
-    it('Get user by ID', async () => {
+    it('Get existing user by ID', async () => {
       const user = await service.getUserById(userId);
       expect(user).not.toBeNull();
+    });
+    it('Get not existing user by ID', async () => {
+      const user = await service.getUserById('fc' + userId.slice(2));
+      expect(user).toBeFalsy();
+    });
+  });
+
+  describe('Get by name', () => {
+    it('Get existing user by Name', async () => {
+      const user = await service.getByName('testusername');
+      expect(user).not.toBeNull();
+    });
+    it('Get not existing user by Name', async () => {
+      const user = await service.getByName('nonexistingname');
+      expect(user).toBeFalsy();
     });
   });
 
