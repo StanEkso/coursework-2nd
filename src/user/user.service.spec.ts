@@ -1,9 +1,24 @@
 import { BadRequestException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { getRepositoryToken, TypeOrmModule } from '@nestjs/typeorm';
+import {
+  getRepositoryToken,
+  TypeOrmModule,
+  TypeOrmModuleOptions,
+} from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Users } from './user.entity';
 import { UserService } from './user.service';
+
+const options: TypeOrmModuleOptions = {
+  host: process.env.POSTGRES_HOST || 'localhost',
+  port: +process.env.POSTGRES_PORT || 5432,
+  username: 'postgres',
+  password: 'postgres',
+  database: 'postgres',
+  type: 'postgres',
+  entities: [Users],
+  synchronize: true,
+};
 
 describe('UserService', () => {
   let service: UserService;
@@ -14,14 +29,7 @@ describe('UserService', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
-        TypeOrmModule.forRoot({
-          type: 'postgres',
-          url:
-            process.env.DATABASE_URL ||
-            'postgres://jdhlqued:FlJwdL50klgXl4rO5_hvcAlOtEyjC5qK@mouse.db.elephantsql.com/jdhlqued',
-          entities: [Users],
-          synchronize: true,
-        }),
+        TypeOrmModule.forRoot(options),
         TypeOrmModule.forFeature([Users]),
       ],
       providers: [UserService],
