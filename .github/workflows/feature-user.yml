@@ -1,0 +1,29 @@
+name: Feature Branch Changes
+run-name: Feature/user push by ${{ github.actor }}
+on:
+  push:
+    branches: [feature/user]
+jobs:
+  TestingProject:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [16.x]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Starting Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Installing modules
+        run: npm install
+      - name: Running Prettier
+        run: npm run pretty
+      - name: Running Eslint
+        run: npm run lint
+      - name: Run Tests
+        run: npm run test
+        env:
+          DATABASE_URL: 'postgres://postgres:postgres@localhost:5432/postgres'
+      - name: Building Project
+        run: npm run build

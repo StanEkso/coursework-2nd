@@ -9,13 +9,16 @@ describe('UserService', () => {
   let service: UserService;
   let userRepository: Repository<Users>;
   let userId: string;
+  console.log(process.env.DATABASE_URL);
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
         TypeOrmModule.forRoot({
           type: 'postgres',
-          url: 'postgres://jdhlqued:FlJwdL50klgXl4rO5_hvcAlOtEyjC5qK@mouse.db.elephantsql.com/jdhlqued',
+          url:
+            process.env.DATABASE_URL ||
+            'postgres://jdhlqued:FlJwdL50klgXl4rO5_hvcAlOtEyjC5qK@mouse.db.elephantsql.com/jdhlqued',
           entities: [Users],
           synchronize: true,
         }),
