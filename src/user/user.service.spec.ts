@@ -13,8 +13,8 @@ const options: TypeOrmModuleOptions = {
   host: process.env.POSTGRES_HOST || 'localhost',
   port: +process.env.POSTGRES_PORT || 5432,
   username: 'postgres',
-  password: 'postgres',
-  database: 'postgres',
+  password: process.env.POSTGRES_PASSWORD || 'root',
+  database: process.env.POSTGRES_DB_NAME || 'testingdb',
   type: 'postgres',
   entities: [Users],
   synchronize: true,
@@ -24,7 +24,6 @@ describe('UserService', () => {
   let service: UserService;
   let userRepository: Repository<Users>;
   let userId: string;
-  console.log(process.env.DATABASE_URL);
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({

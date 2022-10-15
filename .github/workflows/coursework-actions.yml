@@ -11,6 +11,23 @@ jobs:
     strategy:
       matrix:
         node-version: [16.x]
+
+    services:
+      postgres:
+        image: postgres
+
+        env:
+          POSTGRES_PASSWORD: postgres
+
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+        ports:
+          - 5432:5432
+
     steps:
       - uses: actions/checkout@v3
       - name: Starting Node.js ${{ matrix.node-version }}
@@ -23,7 +40,12 @@ jobs:
         run: npm run pretty
       - name: Running Eslint
         run: npm run lint
-      - name: Run Tests
+      - name: Run Unit Tests
         run: npm run test
+        env:
+          POSTGRES_HOST: localhost
+          POSTGRES_PORT: 5432
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB_NAME: postgres
       - name: Building Project
         run: npm run build

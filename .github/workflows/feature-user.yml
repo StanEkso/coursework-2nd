@@ -2,7 +2,7 @@ name: Feature Branch Changes
 run-name: Feature/user push by ${{ github.actor }}
 on:
   push:
-    branches: [feature/user]
+    branches: [feature/nonusedbranchnow]
 jobs:
   TestingProject:
     runs-on: ubuntu-latest
@@ -42,5 +42,6 @@ jobs:
         env:
           POSTGRES_HOST: localhost
           POSTGRES_PORT: 5432
+          POSTGRES_PASSWORD: postgres
       - name: Building Project
         run: npm run build
