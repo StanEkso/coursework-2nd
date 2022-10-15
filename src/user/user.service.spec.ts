@@ -5,6 +5,7 @@ import {
   TypeOrmModule,
   TypeOrmModuleOptions,
 } from '@nestjs/typeorm';
+import * as bcrypt from 'bcrypt';
 import { Repository } from 'typeorm';
 import { Users } from './user.entity';
 import { UserService } from './user.service';
@@ -49,7 +50,10 @@ describe('UserService', () => {
   });
 
   describe('createUser', () => {
-    it('Creates new user', async () => {
+    jest
+      .spyOn(bcrypt, 'hash')
+      .mockImplementation((data: string) => 'hashed_' + data);
+    it('Creates new user and hashing password', async () => {
       const object = {
         username: 'testusername',
         password: 'testpassword',
@@ -57,7 +61,10 @@ describe('UserService', () => {
       };
       const result = await service.createUser(object);
       userId = result.id;
-      expect(userRepository.create).toBeCalledWith(object);
+      expect(userRepository.create).toBeCalledWith({
+        ...object,
+        password: 'hashed_testpassword',
+      });
     });
 
     it('Creates user with same data', async () => {
